@@ -28,6 +28,17 @@ def genTable(window, rows, cols, gridColor, bgColor):
     return table
 
 
+def genDropdown(table, row, col, options, bgColor, fgColor, font):
+    var = tk.StringVar(value="-")
+    dropdown = tk.OptionMenu(table, var, *options)
+    dropdown.configure(bg=bgColor, fg=fgColor, font=font)
+    dropdown.grid(row=row, column=col, sticky='nsew')
+
+
+def compSet(optionMenu, list, posa, posb):
+    list[posa][posb] = optionMenu.get()
+
+
 def writeCell(table, row, col, content, bgColor, fgColor, font):
     label = tk.Label(
         table, text=content, bg=bgColor, fg=fgColor, font=font, bd=2, relief=tk.SOLID)
