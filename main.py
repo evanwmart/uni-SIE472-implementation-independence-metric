@@ -61,8 +61,8 @@ VPNOps = ['BGP', 'DMVPN', 'GETVPN', 'GRE', 'IPsec', 'IKEv2', 'L2TP/IPSec', 'MPLS
 if __name__ == "__main__":
     print("Starting main ...")
 
-    window = gf.genWindow("black")
-    table = gf.genTable(window, 21, 7, "white", "black")
+    window = gf.genWindow("white")
+    table = gf.genTable(window, 21, 7, "black", "white")
     for col in range(7):
         gf.writeCell(
             table, 0, col, colTitles[col], 'cyan', "black", ('Arial', 14, 'bold'))
