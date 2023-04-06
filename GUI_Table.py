@@ -1,13 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 
-
 class Table:
     def __init__(self, root, rows, columns):
         self.root = root
         self.rows = rows
         self.columns = columns
-        self.header_names = ['Components', 'Perception', 'Transport', 'Processing', 'Application', 'Uniqueness Score']
+        self.header_names = ['Categories', 'Components', 'Perception', 'Transport', 'Processing', 'Application', 'Uniqueness Score']
         self.create_table()
 
     def create_table(self):
@@ -18,38 +17,51 @@ class Table:
         # Create table headers
         self.header_labels = []
         for col in range(self.columns):
-            header_label = ttk.Label(self.table_frame, text=self.header_names[col])
-            header_label.grid(row=0, column=col, padx=5, pady=5)
+            header_label = ttk.Label(self.table_frame, text=self.header_names[col], relief='groove', borderwidth=1)
+            header_label.grid(row=0, column=col, padx=5, pady=5, sticky='nsew')
             self.header_labels.append(header_label)
 
         # Create table rows and cells
         self.cells = {}
         row_names = ['CPU Architecture', 'Wireless Comms', 'Wired Comms', 'CPU Type', 'Firewall',
-                     'Firmware', 'OS', 'Firewall', 'Lib & Framework', 'Compiler', 'Languages',
-                     'Cryptography', 'Auth. Methods', 'Communication', 'Transmission', 'VPN',
-                     'Cloud Service', 'Database', 'DBMS', 'App. Protocol']
+                    'Firmware', 'OS', 'Firewall', 'Lib & Framework', 'Compiler', 'Languages',
+                    'Cryptography', 'Auth. Methods', 'Communication', 'Transmission', 'VPN',
+                    'Cloud Service', 'Database', 'DBMS', 'App. Protocol']
+        cat_names = ['Hardware', " ", " "," "," ", 'Software', " "," "," "," "," ", 'Security Procol',
+                    " ", 'Network', " "," ", "Data Management", " "," "," "]
+        
         for row in range(20):
             # Create row label
-            row_label = ttk.Label(self.table_frame, text=row_names[row])
-            row_label.grid(row=row+1, column=0, padx=5, pady=5)
+            row_label = ttk.Label(self.table_frame, text=row_names[row], relief='groove', borderwidth=1)
+            row_label.grid(row=row+1, column=1, padx=5, pady=5, sticky='nsew')
 
-            for col in range(1, self.columns): # start from 1 to skip the first column
+            for col in range(2, self.columns): # start from 2 to skip the first two columns
                 # Create dropdown menu
                 values = []
-                if row == 0 and col == 1: # CPU Architecture row
+                if row == 0 and col == 2: # CPU Architecture row
                     values = ['Select','x86', 'x86_64', 'ARM', 'ARM64', 'MIPS', 'SPARC', 'PowerPC', 'Itanium']
-                elif row == 1 and col == 1: # Wireless Comms row
+                elif row == 1 and col == 2: # Wireless Comms row
                     values = ['Select',"Bluetooth", "WiFi", "NFC", "RFID", "GPS", "Zigbee", "Z-wave", "LoRa", "Sigfox", "LTE", "5G", "Satellite"]
                 else:
                     values = ['Select','Option 1', 'Option 2', 'Option 3']
                 var = tk.StringVar()
                 var.set(values[0])
                 dropdown = ttk.OptionMenu(self.table_frame, var, *values)
-                dropdown.grid(row=row+1, column=col, padx=5, pady=5)
+                dropdown.grid(row=row+1, column=col, padx=5, pady=5, sticky='nsew')
 
                 # Add cell to dictionary
                 self.cells[(row, col)] = var
 
+                
+            # Create category label
+            cat_label = ttk.Label(self.table_frame, text=cat_names[row], relief='groove', borderwidth=1)
+            cat_label.grid(row=row+1, column=0, padx=5, pady=5, sticky='nsew')
+        
+        # Add grid lines
+        for i in range(self.rows + 1):
+            self.table_frame.grid_rowconfigure(i, minsize=30)
+        for i in range(self.columns):
+            self.table_frame.grid_columnconfigure(i, minsize=150)
 
     def get_values(self):
         # Print values of all cells
@@ -74,6 +86,8 @@ class Table:
                     elif value == 'Option 3':
                         score = 3
                     print(f'{component}, {header_names[-1]}: {score}')
+
+
 
 
 
