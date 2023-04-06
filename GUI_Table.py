@@ -28,7 +28,7 @@ class Table:
                      'Firmware', 'OS', 'Firewall', 'Lib & Framework', 'Compiler', 'Languages',
                      'Cryptography', 'Auth. Methods', 'Communication', 'Transmission', 'VPN',
                      'Cloud Service', 'Database', 'DBMS', 'App. Protocol']
-        for row in range(19):
+        for row in range(20):
             # Create row label
             row_label = ttk.Label(self.table_frame, text=row_names[row])
             row_label.grid(row=row+1, column=0, padx=5, pady=5)
@@ -39,9 +39,9 @@ class Table:
                 if row == 0 and col == 1: # CPU Architecture row
                     values = ['Select','x86', 'x86_64', 'ARM', 'ARM64', 'MIPS', 'SPARC', 'PowerPC', 'Itanium']
                 elif row == 1 and col == 1: # Wireless Comms row
-                    values = ["Bluetooth", "WiFi", "NFC", "RFID", "GPS", "Zigbee", "Z-wave", "LoRa", "Sigfox", "LTE", "5G", "Satellite"]
+                    values = ['Select',"Bluetooth", "WiFi", "NFC", "RFID", "GPS", "Zigbee", "Z-wave", "LoRa", "Sigfox", "LTE", "5G", "Satellite"]
                 else:
-                    values = ['Option 1', 'Option 2', 'Option 3']
+                    values = ['Select','Option 1', 'Option 2', 'Option 3']
                 var = tk.StringVar()
                 var.set(values[0])
                 dropdown = ttk.OptionMenu(self.table_frame, var, *values)
@@ -52,18 +52,28 @@ class Table:
 
 
     def get_values(self):
-        """
-        Gets the values of all cells in the table and prints them to the console.
-        """
-        values = []
-        for i in range(1, self.rows + 1):
-            row = []
-            for j in range(1, self.columns + 1):
-                cell = self.get_cell(i, j)
-                value = cell.get()
-                row.append(value)
-            values.append(row)
-        print(values)
+        # Print values of all cells
+        row_names = ['CPU Architecture', 'Wireless Comms', 'Wired Comms', 'CPU Type', 'Firewall',
+                     'Firmware', 'OS', 'Firewall', 'Lib & Framework', 'Compiler', 'Languages',
+                     'Cryptography', 'Auth. Methods', 'Communication', 'Transmission', 'VPN',
+                     'Cloud Service', 'Database', 'DBMS', 'App. Protocol']
+        header_names = ['Components', 'Perception', 'Transport', 'Processing', 'Application', 'Uniqueness Score']
+        for row in range(self.rows):
+            component = row_names[row]
+            for col in range(1, self.columns): # start from 1 to skip the first column
+                value = self.cells[(row, col)].get()
+                if col <= 5: # normal columns
+                    header_name = header_names[col - 1] # subtract 1 to account for skipping first column
+                    print(f'{component}, {header_name}: {value}')
+                else: # score column
+                    score = 0
+                    if value == 'Option 1':
+                        score = 1
+                    elif value == 'Option 2':
+                        score = 2
+                    elif value == 'Option 3':
+                        score = 3
+                    print(f'{component}, {header_names[-1]}: {score}')
 
 
 
