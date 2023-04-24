@@ -1,4 +1,3 @@
-from tkinter import simpledialog
 import tkinter as tk
 import tkinter.ttk as ttk
 import requests
@@ -49,67 +48,3 @@ def CVEdictToList(CVE_list):
     print("\t", CVE_list[3])
     print("\n")
 
-
-# mylist = getCVEs("Microsoft", dateFormatter(8, 4, 2021),
-#                  dateFormatter(10, 21, 2021), 2)
-# for i in mylist:
-#     CVEdictToList(i)
-
-
-class Table:
-    def __init__(self, master):
-        self.master = master
-        self.cols = ["Name", "Age", "City"]
-        self.table_frame = tk.Frame(self.master)
-        self.table_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-
-        # Create first treeview widget
-        self.tree1 = ttk.Treeview(self.table_frame, columns=self.cols, show="headings")
-        self.tree1.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-        # Add table headers to first treeview
-        for col in self.cols:
-            self.tree1.heading(col, text=col, anchor=tk.CENTER)
-            self.tree1.column(col, width=100, anchor=tk.CENTER)
-
-        # Create second frame for second table
-        self.table_frame2 = tk.Frame(self.table_frame)
-        self.table_frame2.pack(side=tk.LEFT, padx=10)
-
-        # Create second treeview widget
-        self.tree2_cols = ["Country", "Language", "Population"]
-        self.tree2 = ttk.Treeview(self.table_frame2, columns=self.tree2_cols, show="headings")
-        self.tree2.pack(fill=tk.BOTH, expand=True)
-
-        # Add table headers to second treeview
-        for col in self.tree2_cols:
-            self.tree2.heading(col, text=col, anchor=tk.CENTER)
-            self.tree2.column(col, width=100, anchor=tk.CENTER)
-
-        # Add "+" button to add new columns to first table
-        add_col_button = tk.Button(self.master, text="Add Layer", command=self.add_column)
-        add_col_button.pack(pady=10)
-
-    def add_column(self):
-        # Prompt user to enter the name/title of the next column
-        title = tk.simpledialog.askstring(
-            "Add column", "Enter the name/title of the next column:"
-        )
-
-        if title:
-            # Add new column to first table
-            self.cols.append(title)
-
-            # Clear old table
-            self.tree1.delete(*self.tree1.get_children())
-
-            # Add updated table headers to first table
-            for col in self.cols:
-                self.tree1.heading(col, text=col, anchor=tk.CENTER)
-                self.tree1.column(col, width=100, anchor=tk.CENTER)
-
-
-
-root = tk.Tk()
-table = Table(root)
-root.mainloop()
