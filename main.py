@@ -60,6 +60,25 @@ if __name__ == "__main__":
         gf.writeCell(table, row+17, 1,
                      dataManagementCat[row], dataManagementCol, "white", ('Arial', 14))
 
+    for r in range(1, 21):
+        if r > 16:
+            bgcolor = "lightgray"
+        elif r > 13:
+            bgcolor = "darkgray"
+        elif r > 11:
+            bgcolor = "lightgray"
+        elif r > 5:
+            bgcolor = "darkgray"
+        elif r > 0:
+            bgcolor = "lightgray"
+
+        for c in range(2, len(gf.colTitles)):
+            titleCell = table.grid_slaves(row=0, column=c)[0]
+
+            if titleCell.cget("text") != "Uniqueness Score":
+                gf.genDropdown(table, r, c, be.AllOptions[r-1],
+                               bgcolor, "black", ('Arial', 12))
+
     gf.update(window)
 
     print("Main has concluded.")
