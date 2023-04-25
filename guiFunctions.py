@@ -1,8 +1,6 @@
-from tkinter import ttk
 import tkinter as tk
 from tkinter import ttk
 from tkinter import simpledialog
-import backendApis as ba
 
 colTitles = ['Categories', 'Components', 'Uniqueness Score']
 
@@ -18,54 +16,8 @@ def genWindow(bgColor):
     return root
 
 
-class Display:
-    def __init__(self, window):
-        self.window = window
-        self.cols = ["Categories", "Components"]
-        self.rows = 21  # set the number of rows
-
-        self.table_frame = tk.Frame(self.window)
-        self.table_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-
-        # Create a new frame for the entry widget
-        self.entry_frame = tk.Frame(self.window)
-        self.entry_frame.pack(side=tk.TOP, fill=tk.BOTH, padx=10, pady=10)
-
-        # Add a label and an entry widget to the entry frame
-        self.label = tk.Label(
-            self.entry_frame, text="Add layer:")
-        self.label.pack(side=tk.LEFT)
-        self.entry = tk.Entry(self.entry_frame)
-        self.entry.pack(side=tk.LEFT)
-
-        # Add "+" button to add new columns
-        add_col_button = tk.Button(
-            self.entry_frame, text=" + ", command=self.add_column)
-        add_col_button.pack(side=tk.LEFT, padx=5)
-
-        # Create the treeview widget
-        self.treeview = ttk.Treeview(
-            self.table_frame, columns=self.cols, show="headings")
-        self.treeview.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-        # Add table headers
-        for col in self.cols:
-            self.treeview.heading(col, text=col)
-
-        # Add table rows
-        for i in range(self.rows):
-            self.treeview.insert("", tk.END, values=["" for col in self.cols])
-
-    def add_column(self):
-        num_cols = len(self.treeview['columns'])
-        col_index = '#{}'.format(num_cols)
-        self.treeview['columns'] += (col_index,)
-        content = self.entry.get()
-        self.treeview.heading(col_index, text=content)
-        for child in self.treeview.get_children():
-            values = self.treeview.item(child)['values']
-            values += ('',)
-            self.treeview.item(child, values=values)
+def toggle_fullscreen(event, root):
+    root.attributes('-fullscreen', not root.attributes('-fullscreen'))
 
 
 def genTable(window, rows, cols, gridColor, bgColor):
@@ -93,25 +45,12 @@ def addNewColumn(table, addEntryWidget):
         if newColTitle is not None:
             newColIndex = colTitles.index("Uniqueness Score")
             colTitles.insert(newColIndex, newColTitle)
-            print(colTitles)
-
-    for r in range(1, 21):
-        if r > 16:
-            bgcolor = "lightgray"
-        elif r > 13:
-            bgcolor = "darkgray"
-        elif r > 11:
-            bgcolor = "lightgray"
-        elif r > 5:
-            bgcolor = "darkgray"
-        elif r > 0:
-            bgcolor = "lightgray"
-
-        for c in range(2, len(colTitles)):
-            writeCell(
-                table, 0, c, colTitles[c], 'white', "gray", ('Arial', 14, 'bold'))
-            genDropdown(
-                table, r, c, ba.AllOptions[r-1], bgcolor, "black", ('Arial', 12))
+            for row in range(21):
+                writeCell(table, row, newColIndex, "-",
+                        'white', "gray", ('Arial', 12))
+            for col in range(newColIndex, len(colTitles)):
+                writeCell(
+                    table, 0, col, colTitles[col], 'white', "gray", ('Arial', 14, 'bold'))
 
 
 def genDropdown(table, row, col, options, bgColor, fgColor, font):
@@ -133,8 +72,87 @@ def writeCell(table, row, col, content, bgColor, fgColor, font):
 
 def update(window):
     window.mainloop()
+And here is my main.py: import guiFunctions as gf
+import backendApis as be
 
+hardwareCat = ['CPU Architecture', 'Wireless Comms',
+               'Wired Comms', 'CPU Type', 'Firewall']
+softwareCat = ['Firmware', 'OS', 'Firewall', 'Libraries & Frameworks',
+               'Compiler', 'Languages']
+secProtocolCat = ['Cryptography', 'Auth. Methods']
+networkCat = ['Communication', 'Transmission', 'VPN']
+dataManagementCat = ['Cloud Service', 'Database', 'DBMS', 'App. Protocol']
 
-window = Window()
-display = Display(window.root)
-window.root.mainloop()
+dropdownCells = [['-', '-', '-', '-'] * 20]
+
+if __name__ == "__main__":
+    print("Starting main ...")
+
+    window = gf.genWindow("lightgray")
+    table = gf.genTable(window, 21, 7, "gray", "lightgray")
+    for col in range(len(gf.colTitles)):
+        gf.writeCell(
+            table, 0, col, gf.colTitles[col], 'white', "gray", ('Arial', 14, 'bold'))
+
+    # Hardware
+    hardwareCol = 'darkgray'
+    gf.writeCell(table, 1, 0,
+                 'Hardware', hardwareCol, "white", ('Arial', 14, 'bold'))
+    for row in range(5):
+        gf.writeCell(table, row+1, 1,
+                     hardwareCat[row], hardwareCol, "white", ('Arial', 14))
+
+    # Software
+    softwareCol = 'gray'
+    gf.writeCell(table, 6, 0,
+                 'Software', softwareCol, "white", ('Arial', 14, 'bold'))
+    for row in range(6):
+        gf.writeCell(table, row+6, 1,
+                     softwareCat[row], softwareCol, "white", ('Arial', 14))
+
+    # Security Protocol
+    secProtocolCol = 'darkgray'
+    gf.writeCell(table, 12, 0,
+                 'Security Protocol', secProtocolCol, "white", ('Arial', 14, 'bold'))
+    for row in range(2):
+        gf.writeCell(table, row+12, 1,
+                     secProtocolCat[row], secProtocolCol, "white", ('Arial', 14))
+
+    # Network
+    networkCol = 'gray'
+    gf.writeCell(table, 14, 0,
+                 'Network', networkCol, "white", ('Arial', 14, 'bold'))
+    for row in range(3):
+        gf.writeCell(table, row+14, 1,
+                     networkCat[row], networkCol, "white", ('Arial', 14))
+
+    # Data Management
+    dataManagementCol = 'darkgray'
+    gf.writeCell(table, 17, 0,
+                 'Data Management', dataManagementCol, "white", ('Arial', 14, 'bold'))
+    for row in range(4):
+        gf.writeCell(table, row+17, 1,
+                     dataManagementCat[row], dataManagementCol, "white", ('Arial', 14))
+
+    for r in range(1, 21):
+        if r > 16:
+            bgcolor = "lightgray"
+        elif r > 13:
+            bgcolor = "darkgray"
+        elif r > 11:
+            bgcolor = "lightgray"
+        elif r > 5:
+            bgcolor = "darkgray"
+        elif r > 0:
+            bgcolor = "lightgray"
+
+        for c in range(2, len(gf.colTitles)):
+            titleCell = table.grid_slaves(row=0, column=c)[0]
+
+            if titleCell.cget("text") != "Uniqueness Score":
+                gf.genDropdown(table, r, c, be.AllOptions[r-1],
+                               bgcolor, "black", ('Arial', 12))
+
+    gf.update(window)
+
+    print("Main has concluded.")
