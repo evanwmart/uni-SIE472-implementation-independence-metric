@@ -1,22 +1,21 @@
 from tkinter import ttk
 import tkinter as tk
+from tkinter import ttk
 from tkinter import simpledialog
+import backendApis as ba
+
+colTitles = ['Categories', 'Components', 'Uniqueness Score']
 
 
-class Window:
-    def __init__(self):
-        self.root = tk.Tk()
-        # make the window full-screen
-        self.root.attributes('-fullscreen', True)
-        self.root.attributes('-topmost', True)  # make the window always on top
-        self.root.attributes('-alpha', 1.0)  # set the window opacity to 100%
-        # quit on Escape key press
-        self.root.bind(
-            '<Escape>', lambda event: self.toggle_fullscreen(event))
-
-    def toggle_fullscreen(self, event):
-        self.root.attributes(
-            '-fullscreen', not self.root.attributes('-fullscreen'))
+def genWindow(bgColor):
+    root = tk.Tk()
+    root.configure(bg=bgColor)
+    root.attributes('-fullscreen', True)  # make the window full-screen
+    root.attributes('-topmost', True)  # make the window always on top
+    root.attributes('-alpha', 1.0)  # set the window opacity to 100%
+    # quit on Escape key press
+    root.bind('<Escape>', lambda event: toggle_fullscreen(event, root))
+    return root
 
 
 class Display:
@@ -70,7 +69,8 @@ class Display:
 
 
 def genTable(window, rows, cols, gridColor, bgColor):
-    table = tk.Frame(window, bg=bgColor, bd=2, relief=tk.GROOVE)
+    table = tk.Frame(window, bg=bgColor, bd=2,
+                     relief=tk.GROOVE, padx=5, pady=5)
     table.pack(expand=True, fill='both')
     for row in range(rows):
         table.grid_rowconfigure(row, weight=1)
@@ -78,7 +78,40 @@ def genTable(window, rows, cols, gridColor, bgColor):
         table.grid_columnconfigure(col, weight=1)
         cell = tk.Frame(table, bg=gridColor)
         cell.grid(row=0, column=col, sticky='nsew')
+
+    addEntryWidget = tk.Entry(text="Add Layer")
+    addEntryWidget.pack(side="left", anchor="w", padx=10, pady=5)
+    addColumnButton = tk.Button(
+        window, text="Add Layer", command=lambda: addNewColumn(table, addEntryWidget))
+    addColumnButton.pack(side="left", anchor="w", padx=10, pady=5)
     return table
+
+
+def addNewColumn(table, addEntryWidget):
+    if len(colTitles) < 7:
+        newColTitle = addEntryWidget.get()
+        if newColTitle is not None:
+            newColIndex = colTitles.index("Uniqueness Score")
+            colTitles.insert(newColIndex, newColTitle)
+            print(colTitles)
+
+    for r in range(1, 21):
+        if r > 16:
+            bgcolor = "lightgray"
+        elif r > 13:
+            bgcolor = "darkgray"
+        elif r > 11:
+            bgcolor = "lightgray"
+        elif r > 5:
+            bgcolor = "darkgray"
+        elif r > 0:
+            bgcolor = "lightgray"
+
+        for c in range(2, len(colTitles)):
+            writeCell(
+                table, 0, c, colTitles[c], 'white', "gray", ('Arial', 14, 'bold'))
+            genDropdown(
+                table, r, c, ba.AllOptions[r-1], bgcolor, "black", ('Arial', 12))
 
 
 def genDropdown(table, row, col, options, bgColor, fgColor, font):
@@ -94,7 +127,7 @@ def compSet(optionMenu, list, posa, posb):
 
 def writeCell(table, row, col, content, bgColor, fgColor, font):
     label = tk.Label(
-        table, text=content, bg=bgColor, fg=fgColor, font=font, bd=2, relief=tk.SOLID)
+        table, text=content, bg=bgColor, fg=fgColor, font=font, bd=1, relief=tk.RAISED, highlightbackground="white")
     label.grid(row=row, column=col, sticky='nsew')
 
 
