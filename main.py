@@ -1,8 +1,6 @@
 import guiFunctions as gf
 import backendApis as be
 
-colTitles = ['Categories', 'Components', 'Perception Layer', 'Transport Layer',
-             'Processing Layer', 'Application Layer', 'Uniqueness Score']
 hardwareCat = ['CPU Architecture', 'Wireless Comms',
                'Wired Comms', 'CPU Type', 'Firewall']
 softwareCat = ['Firmware', 'OS', 'Firewall', 'Libraries & Frameworks',
@@ -18,9 +16,6 @@ if __name__ == "__main__":
 
     window = gf.genWindow("lightgray")
     table = gf.genTable(window, 21, 7, "gray", "lightgray")
-    for col in range(7):
-        gf.writeCell(
-            table, 0, col, colTitles[col], 'white', "gray", ('Arial', 14, 'bold'))
 
     # Hardware
     hardwareCol = 'darkgray'
@@ -61,22 +56,6 @@ if __name__ == "__main__":
     for row in range(4):
         gf.writeCell(table, row+17, 1,
                      dataManagementCat[row], dataManagementCol, "white", ('Arial', 14))
-
-    for r in range(1, 21):
-        if r > 16:
-            bgcolor = "lightgray"
-        elif r > 13:
-            bgcolor = "darkgray"
-        elif r > 11:
-            bgcolor = "lightgray"
-        elif r > 5:
-            bgcolor = "darkgray"
-        elif r > 0:
-            bgcolor = "lightgray"
-
-        for c in range(2, 6):
-            gf.genDropdown(table, r, c, be.AllOptions[r-1],
-                           bgcolor, "black", ('Arial', 12))
 
     gf.update(window)
 

@@ -2,6 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import simpledialog
 from datetime import datetime
+import backendApis as ba
+from tkinter import filedialog
+from reportlab.pdfgen import canvas
+import shutil
 
 colTitles = ['Categories', 'Components', 'Uniqueness Score']
 
@@ -37,6 +41,9 @@ def genTable(window, rows, cols, gridColor, bgColor):
     addColumnButton = tk.Button(
         window, text="Add Layer", command=lambda: addNewColumn(table, addEntryWidget))
     addColumnButton.pack(side="left", anchor="w", padx=10, pady=5)
+    genPDFButton = tk.Button(
+        window, text="Generate Report", command=lambda: genPDF(window, genPDFButton))
+    genPDFButton.pack(side="left", anchor="w", padx=10, pady=5)
     return table
 
 
@@ -46,12 +53,23 @@ def addNewColumn(table, addEntryWidget):
         if newColTitle is not None:
             newColIndex = colTitles.index("Uniqueness Score")
             colTitles.insert(newColIndex, newColTitle)
-            for row in range(21):
-                writeCell(table, row, newColIndex, "-",
-                          'white', "gray", ('Arial', 12))
-            for col in range(newColIndex, len(colTitles)):
-                writeCell(
-                    table, 0, col, colTitles[col], 'white', "gray", ('Arial', 14, 'bold'))
+            c = len(colTitles) - 2
+            for r in range(1, 21):
+                if r > 16:
+                    bgcolor = "lightgray"
+                elif r > 13:
+                    bgcolor = "darkgray"
+                elif r > 11:
+                    bgcolor = "lightgray"
+                elif r > 5:
+                    bgcolor = "darkgray"
+                elif r > 0:
+                    bgcolor = "lightgray"
+                genDropdown(table, r, c, ba.AllOptions[r-1],
+                            bgcolor, "black", ('Arial', 12))
+    for c in range(len(colTitles)):
+        writeCell(
+            table, 0, c, colTitles[c], 'white', "gray", ('Arial', 14, 'bold'))
 
 
 def genDropdown(table, row, col, options, bgColor, fgColor, font):
@@ -69,6 +87,37 @@ def writeCell(table, row, col, content, bgColor, fgColor, font):
     label = tk.Label(
         table, text=content, bg=bgColor, fg=fgColor, font=font, bd=1, relief=tk.RAISED, highlightbackground="white")
     label.grid(row=row, column=col, sticky='nsew')
+
+
+def genPDF(window, genPDFButton):
+    # Disable the button to prevent multiple PDF generation
+    genPDFButton.config(state="disabled")
+
+    # Generate the PDF file
+    c = canvas.Canvas("example.pdf")
+    c.drawString(100, 750, "Hello World")
+    c.save()
+
+    window.overrideredirect(True)
+    window.after_idle(window.attributes, '-topmost', False)
+
+    # Window opened for file save, please check for hidden windows
+
+    # Prompt the user for a file save location
+    filepath = filedialog.asksaveasfilename(
+        defaultextension=".pdf",
+        filetypes=[("PDF Files", "*.pdf")])
+
+    # If the user selected a file, move the generated PDF to that location
+    if filepath:
+        import shutil
+        shutil.move("example.pdf", filepath)
+
+    window.overrideredirect(False)
+    window.attributes('-topmost', True)
+
+    # Re-enable the button once the PDF generation is complete
+    genPDFButton.config(state="normal")
 
 
 def update(window):
