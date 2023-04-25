@@ -1,4 +1,9 @@
 import tkinter as tk
+from tkinter import ttk
+from tkinter import simpledialog
+from datetime import datetime
+
+colTitles = ['Categories', 'Components', 'Uniqueness Score']
 
 
 def genWindow(bgColor):
@@ -17,7 +22,8 @@ def toggle_fullscreen(event, root):
 
 
 def genTable(window, rows, cols, gridColor, bgColor):
-    table = tk.Frame(window, bg=bgColor, bd=2, relief=tk.GROOVE)
+    table = tk.Frame(window, bg=bgColor, bd=2,
+                     relief=tk.GROOVE, padx=5, pady=5)
     table.pack(expand=True, fill='both')
     for row in range(rows):
         table.grid_rowconfigure(row, weight=1)
@@ -25,7 +31,27 @@ def genTable(window, rows, cols, gridColor, bgColor):
         table.grid_columnconfigure(col, weight=1)
         cell = tk.Frame(table, bg=gridColor)
         cell.grid(row=0, column=col, sticky='nsew')
+
+    addEntryWidget = tk.Entry(text="Add Layer")
+    addEntryWidget.pack(side="left", anchor="w", padx=10, pady=5)
+    addColumnButton = tk.Button(
+        window, text="Add Layer", command=lambda: addNewColumn(table, addEntryWidget))
+    addColumnButton.pack(side="left", anchor="w", padx=10, pady=5)
     return table
+
+
+def addNewColumn(table, addEntryWidget):
+    if len(colTitles) < 7:
+        newColTitle = addEntryWidget.get()
+        if newColTitle is not None:
+            newColIndex = colTitles.index("Uniqueness Score")
+            colTitles.insert(newColIndex, newColTitle)
+            for row in range(21):
+                writeCell(table, row, newColIndex, "-",
+                          'white', "gray", ('Arial', 12))
+            for col in range(newColIndex, len(colTitles)):
+                writeCell(
+                    table, 0, col, colTitles[col], 'white', "gray", ('Arial', 14, 'bold'))
 
 
 def genDropdown(table, row, col, options, bgColor, fgColor, font):
@@ -41,7 +67,7 @@ def compSet(optionMenu, list, posa, posb):
 
 def writeCell(table, row, col, content, bgColor, fgColor, font):
     label = tk.Label(
-        table, text=content, bg=bgColor, fg=fgColor, font=font, bd=2, relief=tk.SOLID)
+        table, text=content, bg=bgColor, fg=fgColor, font=font, bd=1, relief=tk.RAISED, highlightbackground="white")
     label.grid(row=row, column=col, sticky='nsew')
 
 
