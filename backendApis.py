@@ -88,10 +88,7 @@ def dateFormatter(m, d, y):
 
 def getCVEs(keyword, start_date=dateFormatter(1, 1, 2023), end_date=dateFormatter(-1, 0, 0), max_results=10):
     # url = f'https://services.nvd.nist.gov/rest/json/cves/2.0/?pubStartDate={}&pubEndDate={}'
-    print(type(start_date))
-    print(end_date)
     url = f'https://services.nvd.nist.gov/rest/json/cves/2.0/?keywordSearch={keyword}&pubStartDate={start_date}&pubEndDate={end_date}&resultsPerPage={str(max_results)}'
-    print(url)
     response = requests.get(url)
 
     if response.status_code == 200:
