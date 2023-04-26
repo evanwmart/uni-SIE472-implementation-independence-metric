@@ -214,7 +214,7 @@ def genPDF(window, genPDFButton):
     window.overrideredirect(True)
     window.after_idle(window.attributes, '-topmost', False)
 
-    # Window opened for file save, please check for hidden windows
+    #
 
     # Prompt the user for a file save location
     filepath = filedialog.asksaveasfilename(
