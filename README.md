@@ -79,6 +79,37 @@ This project was developed under the **INSuRE (Information Security and Research
 
 ---
 
+## Images & Illustrations
+
+Below are a few screenshots and diagrams to illustrate the tool’s usage and the conceptual metric:
+
+1. **Metric Tool Usage**  
+   *Example of populating different layers and components:*
+
+   ![Metric Tool Usage](images/example-process.png)
+
+2. **Poor System Independence**  
+   *An example configuration that yields lower independence scores:*
+
+   ![Poor System Example](images/example-poor.png)
+
+3. **Strong System Independence**  
+   *An example configuration that yields higher independence scores:*
+
+   ![Poor System Example](images/example-strong.png)
+
+4. **Diversity Score Equation**  
+   *Formula describing how the overall diversity score (D) is computed as the average of all uniqueness scores (U<sub>i</sub>):*
+
+   ![Diversity Score Equation](images/equation.png)
+
+5. **Metric Explanation**  
+   *A representation of how repeated components across layers affect individual Uniqueness Scores—ranging from 1.00 to 0.00:*
+
+   ![Metric Explanation](images/representation.png)
+
+---
+
 ## Technology
 
 - **Language**: Python 3.x  
@@ -118,7 +149,6 @@ This project was developed under the **INSuRE (Information Security and Research
 ## Contributors
 
 **Codebase Core Team**  
-### Codebase Core Team
 - [**Richardo Larez**](https://github.com/richardolarez) (Undergraduate in Software Engineering)  
 - [**Glenn Sears**](https://github.com/gsears72) (Undergraduate in Software Engineering)  
 - [**Evan Martin**](https://github.com/evanwmart) (Undergraduate in Software Engineering)    
